@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "package": "rm -f ../CodeStreamConsumer.zip && zip -rq ../CodeStreamConsumer.zip Dockerfile README.md package.json src"
   },
   "dependencies": {
     "express": "^4.19.2",

@@ -4,5 +4,8 @@
   "type": "module",
   "bin": {
     "monitor-tool": "./analyser.js"
+  },
+  "scripts": {
+    "package": "rm -f ../MonitorTool.zip && zip -rq ../MonitorTool.zip analyser.js package.json README.md"
   }
 }
