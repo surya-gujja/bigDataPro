@@ -4,3 +4,5 @@ Detailed answers, instrumentation notes, and statistical analysis are compiled i
 [`qualitas_report.tex`](qualitas_report.tex). The report references the monitored implementation and
 raw metrics sample (`data/metrics_sample.csv`). Packaging instructions are provided in the
 respective project READMEs so reviewers can recreate the submission archives locally when needed.
+These files now reflect the merged wording from both historical branches, eliminating the conflict
+markers that previously blocked the pull request.

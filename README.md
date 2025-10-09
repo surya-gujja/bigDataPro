@@ -1,7 +1,10 @@
 # Qualitas Corpus Stream Processing Assets
 
 This repository contains the instrumented cljDetector (CodeStreamConsumer), monitoring utilities,
-and the LaTeX report requested for the Qualitas Corpus investigation.
+and the LaTeX report requested for the Qualitas Corpus investigation. The documentation has been
+consolidated so that the details from both the historical `main` branch and the
+`codex/setup-qualitas-corpus-and-codestream-application-s8rnvk` feature branch coexist without
+conflict.
 
 ## Contents
 - `CodeStreamConsumer/` — instrumented consumer with monitoring endpoints.

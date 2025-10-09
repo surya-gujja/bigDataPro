@@ -4,7 +4,9 @@ This container hosts an Express.js service that receives code files via HTTP POS
 them through an instrumented rolling-hash based clone detector, and exposes timing statistics via
 lightweight HTML dashboards as well as JSON endpoints for automated analysis. The UI remains the
 simple dashboard shipped with the upstream template, but now includes additional telemetry gathered
-from the monitoring hooks.
+from the monitoring hooks. The merged documentation below reflects the combined feature set from the
+`main` branch and the `codex/setup-qualitas-corpus-and-codestream-application-s8rnvk` branch so that
+downstream consumers no longer encounter merge conflicts when rebasing.
 
 ## Available Endpoints
 
@@ -36,7 +38,8 @@ Build the image:
 docker build -t csconsumer .
 ```
 
-Run the container with bind mounts for live code edits and metric export:
+Run the container with bind mounts for live code edits and metric export (the simpler `docker run -p
+8080:3000 csconsumer` invocation from `main` still works if you do not need live reloading):
 
 ```bash
 docker run -p 8080:3000 \
