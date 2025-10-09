@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  cs-generator:
+    image: csgenerator:latest
+    volumes:
+      - qc-volume:/QualitasCorpus
+    environment:
+      - DELAY=2000
+    depends_on:
+      - cs-consumer
+  cs-consumer:
+    build:
+      context: ./CodeStreamConsumer
+    image: csconsumer:latest
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./CodeStreamConsumer:/app
+      - ./data:/app/data
+    environment:
+      - MONITOR_OUTPUT_DIR=/app/data
+volumes:
+  qc-volume:
+    external: true

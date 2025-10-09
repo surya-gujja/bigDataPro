@@ -1,0 +1,8 @@
+{
+  "name": "monitor-tool",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "monitor-tool": "./analyser.js"
+  }
+}
