@@ -2,15 +2,17 @@
 
 This container hosts an Express.js service that receives code files via HTTP POST requests, processes
 them through an instrumented rolling-hash based clone detector, and exposes timing statistics through
-HTML dashboards and JSON endpoints.
+both lightweight HTML dashboards and JSON endpoints. The description below merges the previously
+conflicting branch documentation so reviewers see the complete feature set in one place.
 
 ## Available Endpoints
 
 - `POST /upload` – accepts multipart/form-data with the field `code`. Each file is processed in
   sequence and evaluated for clones against previously submitted files.
 - `GET /` – returns summary information for the most recently processed file.
-- `GET /stats` – returns aggregate timing data, including historical processing durations, per-stage
-  metrics (chunkify, candidate lookup, expansion), and averages/percentiles.
+- `GET /stats` – returns aggregate timing data, including historical processing durations,
+  normalised timings per source line, and per-stage metrics (chunkify, candidate lookup,
+  expansion).
 - `GET /stats/raw` – dumps the latest samples and summaries as JSON for offline analysis.
 
 ## Development
