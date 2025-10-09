@@ -16,3 +16,14 @@ For a full discussion of methodology, performance trends, and mitigation strateg
 > **Note:** Submission zip archives are intentionally excluded from version control. Recreate them
 > using the packaging scripts documented in `CodeStreamConsumer/README.md` and
 > `MonitorTool/README.md` when preparing deliverables.
+
+## Rebuilding Submission Archives
+
+Both primary components ship with helper scripts to rebuild the artefacts requested in the brief:
+
+```bash
+(cd CodeStreamConsumer && npm install && npm run package)
+(cd MonitorTool && npm install && npm run package)
+```
+
+Each command generates a corresponding `.zip` in the repository root without committing the file.

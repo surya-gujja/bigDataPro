@@ -1,8 +1,10 @@
 # CodeStreamConsumer
 
 This container hosts an Express.js service that receives code files via HTTP POST requests, processes
-them through an instrumented rolling-hash based clone detector, and exposes timing statistics through
-both lightweight HTML dashboards and JSON endpoints.
+them through an instrumented rolling-hash based clone detector, and exposes timing statistics via
+lightweight HTML dashboards as well as JSON endpoints for automated analysis. The UI remains the
+simple dashboard shipped with the upstream template, but now includes additional telemetry gathered
+from the monitoring hooks.
 
 ## Available Endpoints
 
