@@ -1,0 +1,6 @@
+# Node.js dependencies
+CodeStreamConsumer/node_modules/
+MonitorTool/node_modules/
+
+# Generated archives
+*.zip
