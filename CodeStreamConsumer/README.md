@@ -2,8 +2,7 @@
 
 This container hosts an Express.js service that receives code files via HTTP POST requests, processes
 them through an instrumented rolling-hash based clone detector, and exposes timing statistics through
-both lightweight HTML dashboards and JSON endpoints. The description below merges the previously
-conflicting branch documentation so reviewers see the complete feature set in one place.
+both lightweight HTML dashboards and JSON endpoints.
 
 ## Available Endpoints
 
