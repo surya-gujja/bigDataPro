@@ -9,6 +9,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 const app = express();
 const detector = new CloneDetector();
 const timings = [];
+const MAX_TIMINGS_HISTORY = 5000;
+const HISTORY_WINDOW = 50;
 let lastResult = null;
 
 function formatDuration(value) {
@@ -20,6 +22,18 @@ function average(values) {
     return 0;
   }
   return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function median(values) {
+  if (!values.length) {
+    return 0;
+  }
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  return sorted[mid];
 }
 
 function percentile(values, p) {
@@ -65,12 +79,14 @@ app.get('/stats', (_req, res) => {
   const durations = timings.map((entry) => entry.duration);
   const perLine = timings.map((entry) => entry.duration / Math.max(entry.lines, 1));
   const filesProcessed = timings.length;
+  const totalTime = durations.reduce((sum, value) => sum + value, 0);
+  const throughput = filesProcessed && totalTime ? (filesProcessed / (totalTime / 1000)).toFixed(2) : '0.00';
 
   const cloneStorageSize = CloneStorage.getInstance().all().length;
   const processedFiles = FileStorage.getInstance().all().length;
 
   const rows = timings
-    .slice(-50)
+    .slice(-HISTORY_WINDOW)
     .reverse()
     .map(
       (entry) => `
@@ -90,9 +106,12 @@ app.get('/stats', (_req, res) => {
     <p><strong>Total clones stored:</strong> ${cloneStorageSize}</p>
     <ul>
       <li>Average duration: ${formatDuration(average(durations))}</li>
+      <li>Median duration: ${formatDuration(median(durations))}</li>
       <li>P95 duration: ${formatDuration(percentile(durations, 95))}</li>
       <li>Average per-line duration: ${(average(perLine)).toFixed(4)} ms/line</li>
+      <li>Median per-line duration: ${(median(perLine)).toFixed(4)} ms/line</li>
       <li>P95 per-line duration: ${(percentile(perLine, 95)).toFixed(4)} ms/line</li>
+      <li>Processing throughput: ${throughput} files/s</li>
     </ul>
     <table border="1" cellspacing="0" cellpadding="4">
       <thead>
@@ -108,6 +127,7 @@ app.get('/stats', (_req, res) => {
         ${rows}
       </tbody>
     </table>
+    <p>Showing the most recent ${Math.min(HISTORY_WINDOW, timings.length)} samples.</p>
   `);
 });
 
@@ -142,6 +162,10 @@ app.post('/upload', upload.single('code'), (req, res) => {
     lines: result.lines,
     timestamp: new Date().toISOString()
   });
+
+  if (timings.length > MAX_TIMINGS_HISTORY) {
+    timings.splice(0, timings.length - MAX_TIMINGS_HISTORY);
+  }
 
   res.json({
     message: 'File processed successfully',

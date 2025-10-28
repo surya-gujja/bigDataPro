@@ -1,0 +1,6 @@
+node_modules/
+CodeStreamConsumer/node_modules/
+CodeStreamConsumer/npm-debug.log*
+CodeStreamConsumer/yarn-error.log
+CodeStreamConsumer/package-lock.json
+CodeStreamConsumer/pnpm-lock.yaml
