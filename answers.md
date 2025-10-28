@@ -22,19 +22,22 @@ processing bottleneck: the consumer never frees the raw file payload nor the ind
 These changes let the consumer progress through the corpus without hitting a hard RAM ceiling.
 
 ## 2. Reducing `CHUNKSIZE` × `CHUNKSIZE` Comparisons
-The new `CloneDetector` applies a two-step filter: it normalises source lines, hashes each chunk with
-SHA-1, and only performs element-wise comparisons for chunks that share the same hash. This replaces
-the quadratic “compare every chunk pair” step with lookups in an inverted index. Additional filters
-(such as token fingerprints or Bloom filters) can further reduce the candidate set before the
-line-by-line comparison is attempted.
+The revamped `CloneDetector` removes comments and normalises whitespace before chunking, then hashes
+each chunk with SHA-1 so only equal hashes ever trigger a detailed comparison. When a hit is found
+the detector expands it to the longest possible sequence by walking backwards and forwards through
+the cached `SourceLine` arrays and consolidates the resulting clones so that shorter duplicates are
+discarded. Even long clones therefore require a single hash lookup and one expansion pass rather
+than repeated chunk-to-chunk comparisons. Additional filters (such as token fingerprints or Bloom
+filters) can further cut down the number of candidates that reach this step.
 
 ## 3. Timing Trends Over Long Runs
-The `/stats` endpoint now tracks processing time, per-line normalised time, and high-percentile
-latencies. Runs on large inputs show the usual upward trend: more processed files translate into more
-chunk signatures in the index, which makes lookups slower. Clone deduplication also scans a growing
-singleton store. The percentiles surface when the caches miss (typically on files from new projects)
-and the detector must fetch many historical signatures. Sharding the index or pruning stale chunks
-keeps the curve flatter.
+The `/stats` endpoint now captures per-file timing history (capped to the latest 5,000 samples),
+shows the last 50 observations in a table, and reports aggregate metrics such as median, P95, and
+per-line distributions plus overall throughput. On large runs the average and percentile timings
+creep upward as more signatures accumulate in the in-memory index, increasing the number of matches
+each upload must walk through. Clone deduplication also spends longer merging overlaps because the
+expansion step traverses increasingly long arrays. Sharding the index or periodically pruning stale
+entries keeps the curves flatter.
 
 ## 4. CodeStreamConsumer Deliverable
 The fully implemented container, including Dockerfile, Node.js sources, and documentation, is zipped
